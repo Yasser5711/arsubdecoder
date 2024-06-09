@@ -7,10 +7,15 @@ import {
 } from "@/api/index";
 export const useAppStore = defineStore("app", {
   state: () => ({
+    theme: window.matchMedia("(prefers-color-scheme: dark)").matches
+      ? "dark"
+      : "light",
     selectedExtension: ".srt",
     //selectedLanguage: "en",
     selectedDecoder: "windows-1256",
     history: [],
+    decoders: ["utf-8", "windows-1256", "iso-8859-1"],
+    outputExtensions: [".txt", ".srt", ".sub", ".ssa", ".ass", ".vtt"],
   }),
   getters: {
     getSelectedExtension() {
@@ -23,6 +28,20 @@ export const useAppStore = defineStore("app", {
     },
   },
   actions: {
+    toggleTheme() {
+      this.theme = this.theme === "dark" ? "light" : "dark";
+    },
+    detectSystemTheme() {
+      this.theme = window.matchMedia("(prefers-color-scheme: dark)").matches
+        ? "dark"
+        : "light";
+    },
+    watchSystemTheme() {
+      const mq = window.matchMedia("(prefers-color-scheme: dark)");
+      mq.addEventListener("change", () => {
+        this.detectSystemTheme();
+      });
+    },
     setSelectedExtension(extension) {
       this.selectedExtension = extension;
       localStorage.setItem("selectedExtension", extension);
