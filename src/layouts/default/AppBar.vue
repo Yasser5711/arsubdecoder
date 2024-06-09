@@ -1,10 +1,5 @@
 <template>
   <v-app-bar flat>
-    <v-app-bar-title>
-      <v-icon icon="mdi-circle-slice-6" />
-
-      Essentials Preset
-    </v-app-bar-title>
     <span class="text-subtitle-1 font-weight-bold"
       >{{ date.getHours().toString().padStart(2, "0")
       }}<span class="blink">:</span
