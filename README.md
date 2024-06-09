@@ -26,8 +26,8 @@ Make sure you have the following installed:
 1. **Clone the repository:**
 
 ```bash
-git clone https://github.com/yourusername/srt-to-txt-converter.git
-cd srt-to-txt-converter
+git clone https://github.com/Yasser5711/arsubdecoder.git
+cd arsubdecoder
 ```
 
 2. **Install the dependencies:**
@@ -55,9 +55,7 @@ Open your browser and navigate to `http://localhost:3000` to see the app in acti
 
 ## 🌐 Deployment
 
-The app is deployed and can be accessed directly. Visit the live app at:
-
-[Subtitle Decoder App](https://your-deployed-app-url.com)
+The app is deployed and can be accessed directly. Visit the live app at: [Subtitle Decoder App](https://your-deployed-app-url.com)
 
 ## 📦 Build
 
@@ -79,8 +77,6 @@ The output will be in the `dist/` directory.
 
 ## 📧 Contact
 
-Your Name - [@YourTwitterHandle](https://twitter.com/YourTwitterHandle) - your.email@example.com
-
-Project Link: [https://github.com/yourusername/subtitle-decoder-app](https://github.com/yourusername/subtitle-decoder-app)
+Your Name - YasMek@yassermekhfi.com
 
 ---
