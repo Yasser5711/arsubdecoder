@@ -1,0 +1,70 @@
+<template>
+  <v-dialog v-model="internalDialog" width="auto" scrollable>
+    <v-card>
+      <v-card-title> Conversion History </v-card-title>
+      <v-card-text>
+        <v-list lines="two">
+          <v-list-item
+            v-for="item in history"
+            :key="item.id"
+            :title="item.fileName"
+            :subtitle="item.date"
+          >
+            <template v-slot:append>
+              <v-btn icon @click="downloadFile(item)">
+                <v-icon>mdi-download</v-icon>
+              </v-btn>
+              <v-btn icon @click="deleteHistoryItem(item.id)">
+                <v-icon>mdi-delete</v-icon>
+              </v-btn>
+            </template>
+          </v-list-item>
+        </v-list>
+      </v-card-text>
+      <v-card-actions>
+        <v-btn color="red" @click="deleteAllHistoryItems"
+          >Clear All History</v-btn
+        >
+      </v-card-actions>
+    </v-card>
+  </v-dialog>
+</template>
+
+<script>
+export default {
+  name: "HistoryComponent",
+  props: {
+    history: Array,
+    dialog: Boolean,
+  },
+  data() {
+    return {
+      internalDialog: this.dialog,
+    };
+  },
+  watch: {
+    dialog(newVal) {
+      this.internalDialog = newVal;
+    },
+    internalDialog(newVal) {
+      this.$emit("update:dialog", newVal);
+    },
+  },
+  methods: {
+    downloadFile(item) {
+      const link = document.createElement("a");
+      link.href = item.url;
+      link.download = item.fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    },
+    async deleteHistoryItem(id) {
+      await this.$emit("deleteHistoryItem", id);
+    },
+    async deleteAllHistoryItems() {
+      await this.$emit("deleteAllHistoryItems");
+    },
+  },
+};
+</script>
