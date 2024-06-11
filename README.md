@@ -77,6 +77,6 @@ The output will be in the `dist/` directory.
 
 ## 📧 Contact
 
-Your Name - YasMek@yassermekhfi.com
+Yasser Mekhfi - YasMek@yassermekhfi.com
 
 ---
