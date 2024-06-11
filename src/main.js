@@ -6,7 +6,7 @@
 import "@/styles/index.css";
 // Components
 import App from "./App.vue";
-
+import "vuetify-sonner/style.css";
 // Composables
 import { createApp } from "vue";
 

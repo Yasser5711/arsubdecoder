@@ -1,7 +1,7 @@
 <template>
   <v-dialog v-model="internalDialog" width="auto" scrollable>
-    <v-card>
-      <v-card-title> Conversion History </v-card-title>
+    <v-card v-if="history.length">
+      <v-card-title class="my-3"> Conversion History </v-card-title>
       <v-card-text>
         <v-list lines="two">
           <v-list-item
@@ -24,9 +24,20 @@
       <v-card-actions>
         <v-btn color="red" @click="deleteAllHistoryItems"
           >Clear All History</v-btn
-        >
+        ><v-spacer></v-spacer>
+        <v-btn @click="internalDialog = false">Close</v-btn>
       </v-card-actions>
     </v-card>
+    <v-card v-else
+      ><v-empty-state
+        headline="Whoops,"
+        title="No History Found"
+        text="You have not converted any files yet."
+      >
+        <template v-slot:media
+          ><Icon icon="line-md:alert-circle-loop" width="192" height="192"
+        /></template> </v-empty-state
+    ></v-card>
   </v-dialog>
 </template>
 

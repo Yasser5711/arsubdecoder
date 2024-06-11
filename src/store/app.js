@@ -69,5 +69,10 @@ export const useAppStore = defineStore("app", {
       await deleteAllHistoryItems();
       this.history = [];
     },
+    getExtensionFile(file) {
+      const extension = file.name.split(".").pop();
+
+      return !!this.outputExtensions.includes(`.${extension}`);
+    },
   },
 });

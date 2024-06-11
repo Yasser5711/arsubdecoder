@@ -60,16 +60,22 @@
     <v-row v-if="convertedFilePreview">
       <v-col>
         <v-btn @click="saveFile">Save and Download</v-btn>
-      </v-col>
-    </v-row>
+      </v-col> </v-row
+    ><VSonner position="bottom-center" />
   </v-container>
 </template>
 
 <script>
+import { useAppStore } from "@/store/app";
 import { saveAs } from "file-saver";
-
+import { toast } from "vuetify-sonner";
 export default {
   name: "FileInputComponent",
+  emits: [
+    "addToHistory",
+    "update:selectedDecoder",
+    "update:selectedOutputExtension",
+  ],
   props: {
     decoders: {
       type: Array,
@@ -96,7 +102,14 @@ export default {
       selectedOutputExtension_: this.$props.selectedOutputExtension,
     };
   },
+  setup() {
+    const appStore = useAppStore();
+    return { appStore };
+  },
   methods: {
+    showNotification() {
+      toast.success("This is a success notification!");
+    },
     clearPreviews() {
       this.inputFilePreview = null;
       this.convertedFilePreview = null;
@@ -114,6 +127,7 @@ export default {
       this.loadingPreview = true;
       try {
         const fileContent = await this.readFile(this.inputFile);
+
         const outputContent = new TextDecoder("utf-8").decode(
           new Uint8Array(fileContent)
         );
@@ -172,12 +186,19 @@ export default {
       }
     },
     readFile(file) {
-      return new Promise((resolve, reject) => {
-        const reader = new FileReader();
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = () => reject(reader.error);
-        reader.readAsArrayBuffer(file);
-      });
+      if (this.appStore.getExtensionFile(file))
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => {
+            resolve(reader.result);
+          };
+          reader.onerror = () => reject(reader.error);
+          reader.readAsArrayBuffer(file);
+        });
+      else {
+        toast.error("Invalid file extension");
+        throw new Error("Invalid file extension");
+      }
     },
     getFirstNLines(text, n) {
       return text.split("\n").slice(0, n).join("\n");
