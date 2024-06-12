@@ -1,17 +1,7 @@
 :root {
   --scrollbar-width: 8px;
-  --scrollbar-thumb-background: rgba(
-    149,
-    149,
-    149,
-    0.7
-  ); /* Changed for better visibility */
-  --scrollbar-thumb-background-hover: rgba(
-    149,
-    149,
-    149,
-    0.9
-  ); /* Changed for better visibility */
+  --scrollbar-thumb-background: rgba(149, 149, 149, 0.7);
+  --scrollbar-thumb-background-hover: rgba(149, 149, 149, 0.9);
   --scrollbar-thumb-border: 2px solid transparent;
   --scrollbar-thumb-border-hover: 1px solid transparent;
 }
@@ -21,33 +11,13 @@ html {
 }
 
 html.dark {
-  --scrollbar-thumb-background: rgba(
-    255,
-    255,
-    255,
-    0.7
-  ); /* Changed for better visibility */
-  --scrollbar-thumb-background-hover: rgba(
-    255,
-    255,
-    255,
-    0.9
-  ); /* Changed for better visibility */
+  --scrollbar-thumb-background: rgba(255, 255, 255, 0.7);
+  --scrollbar-thumb-background-hover: rgba(255, 255, 255, 0.9);
 }
 
 html.light {
-  --scrollbar-thumb-background: rgba(
-    0,
-    0,
-    0,
-    0.7
-  ); /* Changed for better visibility */
-  --scrollbar-thumb-background-hover: rgba(
-    0,
-    0,
-    0,
-    0.9
-  ); /* Changed for better visibility */
+  --scrollbar-thumb-background: rgba(0, 0, 0, 0.7);
+  --scrollbar-thumb-background-hover: rgba(0, 0, 0, 0.9);
 }
 
 ::-webkit-scrollbar {
@@ -66,4 +36,8 @@ html.light {
 ::-webkit-scrollbar-thumb:hover {
   background-color: var(--scrollbar-thumb-background-hover);
   border: var(--scrollbar-thumb-border-hover);
+}
+.app-content {
+  height: 100vh;
+  overflow-y: scroll;
 }

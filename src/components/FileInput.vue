@@ -20,6 +20,7 @@
           @click:clear="clearPreviews"
           :loading="loadingFile"
           @change="handleFileChange"
+          append-icon="mdi-paperclip"
         ></v-file-input>
       </v-col>
     </v-row>

@@ -9,20 +9,17 @@
       @update:selectedDecoder="updateSelectedDecoder"
       @update:selectedOutputExtension="updateSelectedExtension"
     ></file-input-component>
-
-    <default-footer />
   </v-container>
 </template>
 
 <script>
 import FileInputComponent from "@/components/FileInput.vue";
 import { useAppStore } from "@/store/app";
-import DefaultFooter from "@/layouts/default/AppFooter.vue";
+
 export default {
   name: "HomeView",
   components: {
     FileInputComponent,
-    DefaultFooter,
   },
   setup() {
     const appStore = useAppStore();

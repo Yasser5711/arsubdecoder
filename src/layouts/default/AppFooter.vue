@@ -18,7 +18,7 @@ export default {
 </script>
 <template>
   <v-footer class="text-center d-flex flex-column" color="#FFFFFF00">
-    <div class="" style="mix-blend-mode: difference">
+    <div class="">
       <div>
         <v-btn
           v-for="(icon, i) in icons_"
