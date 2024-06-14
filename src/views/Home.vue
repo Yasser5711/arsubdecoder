@@ -1,6 +1,7 @@
 <template>
-  <v-container>
+  <v-container @dragover.prevent @drop="handleDrop">
     <file-input-component
+      :inputFile_="inputFile"
       :decoders="decoders"
       :outputExtensions="outputExtensions"
       :selectedDecoder="selectedDecoder"
@@ -8,7 +9,18 @@
       @addToHistory="addToHistory"
       @update:selectedDecoder="updateSelectedDecoder"
       @update:selectedOutputExtension="updateSelectedExtension"
+      @clear:inputFile_="inputFile = null"
     ></file-input-component>
+    <v-empty-state
+      v-if="inputFile === null"
+      headline="Drop SubFile Here"
+      title=""
+      text="Drag and drop subtitle file to convert it."
+    >
+      <template v-slot:media>
+        <Icon icon="line-md:uploading-loop" width="192" height="192" />
+      </template>
+    </v-empty-state>
   </v-container>
 </template>
 
@@ -27,6 +39,7 @@ export default {
   },
   data() {
     return {
+      inputFile: null,
       selectedDecoder: this.appStore.getSelectedDecoder,
       selectedOutputExtension: this.appStore.getSelectedExtension,
       decoders: this.appStore.decoders,
@@ -41,17 +54,41 @@ export default {
   created() {
     this.appStore.fetchHistory();
   },
+  mounted() {
+    window.addEventListener("dragover", this.handleDragOver);
+    window.addEventListener("dragleave", this.handleDragLeave);
+    window.addEventListener("drop", this.handleDrop);
+  },
+  beforeUnmount() {
+    window.removeEventListener("dragover", this.handleDragOver);
+    window.removeEventListener("dragleave", this.handleDragLeave);
+    window.removeEventListener("drop", this.handleDrop);
+  },
   methods: {
+    handleDragOver(event) {
+      event.preventDefault();
+    },
+    handleDragLeave(event) {
+      event.preventDefault();
+    },
+    handleDrop(event) {
+      event.preventDefault();
+      const files = event.dataTransfer.files;
+      if (files.length) {
+        this.uploadFile(files[0]);
+      }
+    },
+    uploadFile(file) {
+      this.inputFile = file;
+    },
     addToHistory(file) {
       this.appStore.addToHistory(file.fileName, file.date, file.url);
     },
-
     updateSelectedDecoder(value) {
       this.selectedDecoder = value;
       this.appStore.setSelectedDecoder(value);
     },
     updateSelectedExtension(value) {
-      console.log(value);
       this.selectedOutputExtension = value;
       this.appStore.setSelectedExtension(value);
     },

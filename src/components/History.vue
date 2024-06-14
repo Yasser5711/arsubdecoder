@@ -71,10 +71,10 @@ export default {
       document.body.removeChild(link);
     },
     async deleteHistoryItem(id) {
-      await this.$emit("deleteHistoryItem", id);
+      this.$emit("deleteHistoryItem", id);
     },
     async deleteAllHistoryItems() {
-      await this.$emit("deleteAllHistoryItems");
+      this.$emit("deleteAllHistoryItems");
     },
   },
 };

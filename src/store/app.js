@@ -71,7 +71,6 @@ export const useAppStore = defineStore("app", {
     },
     getExtensionFile(file) {
       const extension = file.name.split(".").pop();
-
       return !!this.outputExtensions.includes(`.${extension}`);
     },
   },

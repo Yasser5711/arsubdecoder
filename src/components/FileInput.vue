@@ -70,12 +70,14 @@
 import { useAppStore } from "@/store/app";
 import { saveAs } from "file-saver";
 import { toast } from "vuetify-sonner";
+import debounce from "lodash/debounce";
 export default {
   name: "FileInputComponent",
   emits: [
     "addToHistory",
     "update:selectedDecoder",
     "update:selectedOutputExtension",
+    "clear:inputFile_",
   ],
   props: {
     decoders: {
@@ -88,6 +90,7 @@ export default {
     },
     selectedDecoder: String,
     selectedOutputExtension: String,
+    inputFile_: File,
   },
   data() {
     return {
@@ -107,6 +110,30 @@ export default {
     const appStore = useAppStore();
     return { appStore };
   },
+  watch: {
+    inputFile_: debounce(function (newVal) {
+      if (newVal === null) {
+        this.clearPreviews();
+        return;
+      }
+
+      if (newVal instanceof File) {
+        if (newVal.size > 1048576) {
+          toast.error("File size exceeds the 1MB limit.");
+          this.clearPreviews();
+          return;
+        }
+
+        if (this.appStore.getExtensionFile(newVal)) {
+          this.inputFile = newVal;
+          toast.success("File selected successfully");
+        } else {
+          this.clearPreviews();
+          toast.error("Invalid file extension");
+        }
+      }
+    }, 300),
+  },
   methods: {
     showNotification() {
       toast.success("This is a success notification!");
@@ -114,16 +141,23 @@ export default {
     clearPreviews() {
       this.inputFilePreview = null;
       this.convertedFilePreview = null;
+      this.$emit("clear:inputFile_");
     },
     handleFileChange() {
       if (this.inputFile) {
-        this.clearPreviews();
+        if (this.inputFile.size > 1048576) {
+          toast.error("File size exceeds the 1MB limit.");
+          this.clearPreviews();
+          return;
+        }
+
         this.loadingFile = true;
         this.previewFile().finally(() => {
           this.loadingFile = false;
         });
       }
     },
+
     async previewFile() {
       this.loadingPreview = true;
       try {
@@ -135,6 +169,7 @@ export default {
         this.inputFilePreview = this.getFirstNLines(outputContent, 15);
       } catch (error) {
         console.error("An error occurred:", error);
+        toast.error("An error occurred while previewing the file.");
       } finally {
         this.loadingPreview = false;
       }
@@ -155,6 +190,7 @@ export default {
           this.convertedContent,
           15
         );
+        toast.success("File converted successfully!");
       } catch (error) {
         console.error("An error occurred:", error);
       } finally {
@@ -163,7 +199,7 @@ export default {
     },
     async saveFile() {
       if (!this.convertedContent) {
-        alert("Please convert the file first.");
+        toast.error("Please convert the file first.");
         return;
       }
       this.loadingSave = true;
@@ -180,26 +216,26 @@ export default {
         const url = URL.createObjectURL(blob);
         const date = new Date().toLocaleString();
         await this.$emit("addToHistory", { fileName, date, url });
+        toast.success("File saved successfully!");
       } catch (error) {
         console.error("An error occurred:", error);
+        toast.error("An error occurred while saving the file.");
       } finally {
         this.loadingSave = false;
       }
     },
     readFile(file) {
-      if (this.appStore.getExtensionFile(file))
-        return new Promise((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => {
-            resolve(reader.result);
-          };
-          reader.onerror = () => reject(reader.error);
-          reader.readAsArrayBuffer(file);
-        });
-      else {
-        toast.error("Invalid file extension");
-        throw new Error("Invalid file extension");
-      }
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => {
+          resolve(reader.result);
+        };
+        reader.onerror = () => {
+          reject(reader.error);
+          toast.error("An error occurred while reading the file.");
+        };
+        reader.readAsArrayBuffer(file);
+      });
     },
     getFirstNLines(text, n) {
       return text.split("\n").slice(0, n).join("\n");
