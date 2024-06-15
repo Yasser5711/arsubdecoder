@@ -25,7 +25,7 @@ export default {
           :key="i"
           class="mx-3"
           :icon="icon.icon_"
-          variant="text"
+          :href="icon.link"
         ></v-btn>
       </div>
 
