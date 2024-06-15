@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+
 import {
   addHistoryItem,
   getHistoryItems,
@@ -11,20 +12,31 @@ export const useAppStore = defineStore("app", {
       ? "dark"
       : "light",
     selectedExtension: ".srt",
-    //selectedLanguage: "en",
+    selectedLanguage: "en",
+    languages: [
+      { code: "en", name: "English" },
+      { code: "ar", name: "عربي" },
+      // { code: "fr", name: "Français" },
+    ],
     selectedDecoder: "windows-1256",
     history: [],
     decoders: ["utf-8", "windows-1256", "iso-8859-1"],
     outputExtensions: [".txt", ".srt", ".sub", ".ssa", ".ass", ".vtt"],
   }),
   getters: {
-    getSelectedExtension() {
+    getSelectedLanguage: (state) => {
+      return localStorage.getItem("selectedLanguage") || state.selectedLanguage;
+    },
+    getSelectedExtension: (state) => {
       return (
-        localStorage.getItem("selectedExtension") || this.selectedExtension
+        localStorage.getItem("selectedExtension") || state.selectedExtension
       );
     },
-    getSelectedDecoder() {
-      return localStorage.getItem("selectedDecoder") || this.selectedDecoder;
+    getSelectedDecoder: (state) => {
+      return localStorage.getItem("selectedDecoder") || state.selectedDecoder;
+    },
+    getLanguages: (state) => {
+      return state.languages;
     },
   },
   actions: {
@@ -41,6 +53,11 @@ export const useAppStore = defineStore("app", {
       mq.addEventListener("change", () => {
         this.detectSystemTheme();
       });
+    },
+
+    setSelectedLanguage(language) {
+      this.selectedLanguage = language;
+      localStorage.setItem("selectedLanguage", language);
     },
     setSelectedExtension(extension) {
       this.selectedExtension = extension;

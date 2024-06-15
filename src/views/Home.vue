@@ -10,12 +10,13 @@
       @update:selectedDecoder="updateSelectedDecoder"
       @update:selectedOutputExtension="updateSelectedExtension"
       @clear:inputFile_="inputFile = null"
+      @update:inputFile_="inputFile = $event"
     ></file-input-component>
     <v-empty-state
       v-if="inputFile === null"
-      headline="Drop SubFile Here"
+      :headline="$t('$vuetify.dropSubtitleFileHere')"
       title=""
-      text="Drag and drop subtitle file to convert it."
+      :text="$t('$vuetify.dragAndDropSubtitleFile')"
     >
       <template v-slot:media>
         <Icon icon="line-md:uploading-loop" width="192" height="192" />

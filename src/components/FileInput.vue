@@ -3,7 +3,7 @@
     <v-row v-if="inputFilePreview">
       <v-col>
         <v-textarea
-          label="File Preview"
+          :label="$t('$vuetify.filePreview')"
           v-model="inputFilePreview"
           readonly
           :loading="loadingPreview"
@@ -15,7 +15,7 @@
         <v-file-input
           :show-size="true"
           v-model="inputFile"
-          label="Select Subtitle File"
+          :label="$t('$vuetify.selectSubtitleFile')"
           accept=".srt,.sub,.ssa,.ass,.vtt"
           @click:clear="clearPreviews"
           :loading="loadingFile"
@@ -29,7 +29,7 @@
         <v-select
           v-model="selectedDecoder_"
           :items="decoders"
-          label="Select Text Decoder"
+          :label="$t('$vuetify.selectTextDecoder')"
           @update:model-value="updateSelectedDecoder"
         ></v-select>
       </v-col>
@@ -39,7 +39,7 @@
         <v-select
           v-model="selectedOutputExtension_"
           :items="outputExtensions"
-          label="Select Output File Extension"
+          :label="$t('$vuetify.selectOutputFileExtension')"
           @update:model-value="updateSelectedExtension"
         ></v-select>
       </v-col>
@@ -47,7 +47,7 @@
     <v-row v-if="convertedFilePreview">
       <v-col>
         <v-textarea
-          label="Converted File Preview"
+          :label="$t('$vuetify.convertedFilePreview')"
           v-model="convertedFilePreview"
           readonly
         ></v-textarea>
@@ -55,12 +55,12 @@
     </v-row>
     <v-row v-if="inputFile && !convertedFilePreview">
       <v-col>
-        <v-btn @click="convertFile">Convert File</v-btn>
+        <v-btn @click="convertFile" :text="$t('$vuetify.convertFile')"></v-btn>
       </v-col>
     </v-row>
     <v-row v-if="convertedFilePreview">
       <v-col>
-        <v-btn @click="saveFile">Save and Download</v-btn>
+        <v-btn @click="saveFile" :text="$t('$vuetify.saveAndDownload')"></v-btn>
       </v-col> </v-row
     ><VSonner position="bottom-center" />
   </v-container>
@@ -78,6 +78,7 @@ export default {
     "update:selectedDecoder",
     "update:selectedOutputExtension",
     "clear:inputFile_",
+    "update:inputFile_",
   ],
   props: {
     decoders: {
@@ -119,24 +120,27 @@ export default {
 
       if (newVal instanceof File) {
         if (newVal.size > 1048576) {
-          toast.error("File size exceeds the 1MB limit.");
+          toast.error(this.$t("$vuetify.fileTooLarge"));
           this.clearPreviews();
           return;
         }
 
         if (this.appStore.getExtensionFile(newVal)) {
           this.inputFile = newVal;
-          toast.success("File selected successfully");
+          //toast.success(this.$t("$vuetify.fileSelectedSuccessfully"));
         } else {
           this.clearPreviews();
-          toast.error("Invalid file extension");
+          toast.error(this.$t("$vuetify.invalidFileExtension"));
         }
       }
     }, 300),
+    inputFile(newVal) {
+      this.$emit("update:inputFile_", newVal);
+    },
   },
   methods: {
     showNotification() {
-      toast.success("This is a success notification!");
+      toast.success(this.$t("$vuetify.successNotification"));
     },
     clearPreviews() {
       this.inputFilePreview = null;
@@ -146,7 +150,7 @@ export default {
     handleFileChange() {
       if (this.inputFile) {
         if (this.inputFile.size > 1048576) {
-          toast.error("File size exceeds the 1MB limit.");
+          toast.error(this.$t("$vuetify.fileTooLarge"));
           this.clearPreviews();
           return;
         }
@@ -169,14 +173,15 @@ export default {
         this.inputFilePreview = this.getFirstNLines(outputContent, 15);
       } catch (error) {
         console.error("An error occurred:", error);
-        toast.error("An error occurred while previewing the file.");
+        toast.error(this.$t("$vuetify.errorWhilePreviewing"));
       } finally {
         this.loadingPreview = false;
       }
     },
     async convertFile() {
       if (!this.inputFile) {
-        alert("Please select a subtitle file first.");
+        //alert(this.$t('$vuetify.pleaseSelectSubtitleFileFirst'));
+        toast.warning(this.$t("$vuetify.pleaseSelectSubtitleFileFirst"));
         return;
       }
       this.loadingConvert = true;
@@ -190,7 +195,7 @@ export default {
           this.convertedContent,
           15
         );
-        toast.success("File converted successfully!");
+        toast.success(this.$t("$vuetify.fileConvertedSuccessfully"));
       } catch (error) {
         console.error("An error occurred:", error);
       } finally {
@@ -199,7 +204,7 @@ export default {
     },
     async saveFile() {
       if (!this.convertedContent) {
-        toast.error("Please convert the file first.");
+        toast.error(this.$t("$vuetify.pleaseConvertFileFirst"));
         return;
       }
       this.loadingSave = true;
@@ -216,10 +221,10 @@ export default {
         const url = URL.createObjectURL(blob);
         const date = new Date().toLocaleString();
         await this.$emit("addToHistory", { fileName, date, url });
-        toast.success("File saved successfully!");
+        toast.success(this.$t("$vuetify.fileSavedSuccessfully"));
       } catch (error) {
         console.error("An error occurred:", error);
-        toast.error("An error occurred while saving the file.");
+        toast.error(this.$t("$vuetify.errorWhileSaving"));
       } finally {
         this.loadingSave = false;
       }
@@ -232,7 +237,7 @@ export default {
         };
         reader.onerror = () => {
           reject(reader.error);
-          toast.error("An error occurred while reading the file.");
+          toast.error(this.$t("$vuetify.errorReadingFile"));
         };
         reader.readAsArrayBuffer(file);
       });

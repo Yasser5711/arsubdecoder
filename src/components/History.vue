@@ -1,7 +1,9 @@
 <template>
   <v-dialog v-model="internalDialog" width="auto" scrollable>
     <v-card v-if="history.length">
-      <v-card-title class="my-3"> Conversion History </v-card-title>
+      <v-card-title class="my-3">{{
+        $t("$vuetify.conversionHistory")
+      }}</v-card-title>
       <v-card-text>
         <v-list lines="two">
           <v-list-item
@@ -22,17 +24,23 @@
         </v-list>
       </v-card-text>
       <v-card-actions>
-        <v-btn color="red" @click="deleteAllHistoryItems"
-          >Clear All History</v-btn
+        <v-btn
+          color="error"
+          @click="deleteAllHistoryItems"
+          :text="$t('$vuetify.clearAllHistory')"
+        ></v-btn
         ><v-spacer></v-spacer>
-        <v-btn @click="internalDialog = false">Close</v-btn>
+        <v-btn
+          @click="internalDialog = false"
+          :text="$t('$vuetify.close')"
+        ></v-btn>
       </v-card-actions>
     </v-card>
     <v-card v-else
       ><v-empty-state
-        headline="Whoops,"
-        title="No History Found"
-        text="You have not converted any files yet."
+        :headline="$t('$vuetify.whoops')"
+        :title="$t('$vuetify.noHistoryFound')"
+        :text="$t('$vuetify.noConvertedFiles')"
       >
         <template v-slot:media
           ><Icon icon="line-md:alert-circle-loop" width="192" height="192"
