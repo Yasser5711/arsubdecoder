@@ -46,6 +46,32 @@ npm run serve
 
 Open your browser and navigate to `http://localhost:3000` to see the app in action.
 
+### Docker Setup
+
+You can also run the app using Docker. Follow the steps below to set up and run the app in a Docker container.
+
+#### Prerequisites
+
+Make sure you have the following installed:
+
+- 🐳 Docker
+
+#### Docker Installation
+
+1. **Build the Docker image:**
+
+```bash
+docker build -t subtitle-decoder-app .
+```
+
+2. **Run the Docker container:**
+
+```bash
+docker run -p 3000:3000 subtitle-decoder-app
+```
+
+Open your browser and navigate to `http://localhost:3000` to see the app in action.
+
 ## 🛠️ Usage
 
 1. **Upload Subtitle File:** Click on the "Upload" button and select your subtitle file (supported extensions: `.srt`, `.sub`, `.vtt`, etc.).
@@ -55,7 +81,7 @@ Open your browser and navigate to `http://localhost:3000` to see the app in acti
 
 ## 🌐 Deployment
 
-The app is deployed and can be accessed directly. Visit the live app at: [Subtitle Decoder App](https://your-deployed-app-url.com)
+The app is deployed and can be accessed directly. Visit the live app at: [Subtitle Decoder App](https://arsub.yassermekhfi.tech/)
 
 ## 📦 Build
 
@@ -78,5 +104,3 @@ The output will be in the `dist/` directory.
 ## 📧 Contact
 
 Yasser Mekhfi - YasMek@yassermekhfi.com
-
----
